@@ -1,0 +1,2737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rankings.io — Sales All Hands</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ============================================
+   FONTS
+   ============================================ */
+@font-face {
+  font-family: 'Roslindale';
+  src: url('fonts/Roslindale-DisplayCondensedBold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Roslindale';
+  src: url('fonts/Roslindale-DisplayCondensedSemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Roslindale';
+  src: url('fonts/Roslindale-DisplayCondensedMedium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Roslindale';
+  src: url('fonts/Roslindale-DisplayCondensedRegular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Roslindale';
+  src: url('fonts/Roslindale-DisplayCondensedExtraLight.ttf') format('truetype');
+  font-weight: 200;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Satoshi';
+  src: url('fonts/Satoshi-Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Satoshi';
+  src: url('fonts/Satoshi-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Satoshi';
+  src: url('fonts/Satoshi-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Satoshi';
+  src: url('fonts/Satoshi-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Satoshi';
+  src: url('fonts/Satoshi-Black.otf') format('opentype');
+  font-weight: 900;
+  font-style: normal;
+}
+
+/* ============================================
+   BRAND TOKENS
+   ============================================ */
+:root {
+  --tuxedo:     #282828;
+  --suede:      #fcfaec;
+  --pearl:      #ffffff;
+  --sky:        #3a93cf;
+  --midnight:   #14364d;
+  --chartreuse: #c6e005;
+  --flax:       #eedc82;
+
+  --font-display: 'Roslindale', Georgia, serif;
+  --font-body:    'Satoshi', system-ui, sans-serif;
+}
+
+/* ============================================
+   RESET & BASE
+   ============================================ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: var(--tuxedo);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================
+   SLIDE FRAMEWORK
+   ============================================ */
+.deck {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+.slide.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ============================================
+   NAVIGATION
+   ============================================ */
+.nav {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  z-index: 1000;
+  background: rgba(40, 40, 40, 0.85);
+  backdrop-filter: blur(12px);
+  padding: 10px 20px;
+  border-radius: 40px;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.nav button {
+  background: none;
+  border: none;
+  color: var(--pearl);
+  cursor: pointer;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s;
+  font-size: 18px;
+}
+.nav button:hover {
+  background: rgba(255,255,255,0.12);
+}
+.nav button:active {
+  background: var(--chartreuse);
+  color: var(--tuxedo);
+}
+.nav .slide-counter {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  min-width: 50px;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+/* Progress bar */
+.progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  background: var(--chartreuse);
+  z-index: 1000;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================
+   SLIDE 1 — TITLE
+   ============================================ */
+.slide-title {
+  background: var(--midnight);
+  position: relative;
+  justify-content: center;
+}
+.slide-title::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 80%, rgba(198, 224, 5, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 20%, rgba(58, 147, 207, 0.15) 0%, transparent 60%);
+  pointer-events: none;
+}
+.slide-title .content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 20px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-height: 100vh;
+}
+.slide-title .logo {
+  width: 80px;
+  height: auto;
+  margin-bottom: 20px;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.2s forwards;
+}
+.slide-title h1 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(48px, 8vw, 120px);
+  color: var(--pearl);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.4s forwards;
+}
+.slide-title h1 span {
+  color: var(--chartreuse);
+}
+.slide-title .subtitle {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: clamp(16px, 2vw, 24px);
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 24px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.6s forwards;
+}
+.slide-title .date-badge {
+  display: inline-block;
+  margin-top: 40px;
+  padding: 8px 24px;
+  border: 1px solid rgba(198, 224, 5, 0.3);
+  border-radius: 40px;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--chartreuse);
+  letter-spacing: 0.08em;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.8s forwards;
+}
+.slide-title .bunny-photo {
+  margin-top: 16px;
+  width: clamp(300px, 50vw, 640px);
+  flex: 1;
+  min-height: 0;
+  object-fit: cover;
+  border-radius: 16px;
+  border: 3px solid rgba(198, 224, 5, 0.25);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  animation: fadeUp 0.8s 1s forwards;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
+}
+.slide-title .bunny-photo:hover {
+  transform: scale(1.03) rotate(-1deg);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5), 0 0 40px rgba(198, 224, 5, 0.15);
+}
+.slide-title .logo {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.slide-title .logo:hover {
+  transform: scale(1.12) rotate(5deg);
+}
+
+/* Easter eggs */
+.egg-field {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+.easter-egg {
+  width: 42px;
+  height: 54px;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  cursor: pointer;
+  pointer-events: auto;
+  position: absolute;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  border: none;
+  outline: none;
+  background: var(--egg-color);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.easter-egg::before {
+  content: '';
+  position: absolute;
+  top: 38%;
+  left: 8%; right: 8%;
+  height: 7px;
+  border-radius: 3px;
+  background: var(--egg-accent, rgba(255,255,255,0.35));
+  z-index: 2;
+}
+.easter-egg::after {
+  content: '';
+  position: absolute;
+  top: 52%;
+  left: 12%; right: 12%;
+  height: 5px;
+  border-radius: 2px;
+  background: var(--egg-accent, rgba(255,255,255,0.2));
+  opacity: 0.6;
+  z-index: 2;
+}
+.easter-egg:hover {
+  transform: var(--egg-base-transform) translateY(-6px) scale(1.1);
+}
+
+/* Cracked — egg splits and emoji pops out */
+.easter-egg.cracked {
+  pointer-events: none;
+}
+.easter-egg.cracked .egg-top {
+  animation: eggTopFly 0.5s ease-out forwards;
+}
+.easter-egg.cracked .egg-bottom {
+  animation: eggBottomSettle 0.5s ease-out forwards;
+}
+.easter-egg.cracked .egg-prize {
+  animation: prizePopUp 0.5s 0.15s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Egg shell halves */
+.egg-top, .egg-bottom {
+  position: absolute;
+  left: 0; right: 0;
+  background: inherit;
+  z-index: 1;
+}
+.egg-top {
+  top: 0; height: 50%;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  /* jagged crack edge */
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 85% 100%, 70% 75%, 55% 100%, 40% 80%, 25% 100%, 10% 75%, 0 90%);
+}
+.egg-bottom {
+  bottom: 0; height: 55%;
+  border-radius: 0 0 50% 50% / 0 0 80% 80%;
+  clip-path: polygon(0 30%, 10% 0%, 25% 25%, 40% 0%, 55% 20%, 70% 0%, 85% 25%, 100% 5%, 100% 100%, 0 100%);
+}
+
+.egg-prize {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%) scale(0);
+  font-size: 28px;
+  z-index: 5;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
+}
+
+@keyframes eggTopFly {
+  0% { transform: translateY(0) rotate(0); opacity: 1; }
+  100% { transform: translateY(-40px) rotate(25deg); opacity: 0; }
+}
+@keyframes eggBottomSettle {
+  0% { transform: translateY(0); }
+  40% { transform: translateY(4px); }
+  100% { transform: translateY(2px); opacity: 0.5; }
+}
+@keyframes prizePopUp {
+  0% { transform: translateX(-50%) scale(0) translateY(10px); opacity: 0; }
+  100% { transform: translateX(-50%) scale(1.2) translateY(-30px); opacity: 1; }
+}
+
+/* Gold winner glow */
+.easter-egg.winner.cracked::before,
+.easter-egg.winner.cracked::after { display: none; }
+.easter-egg.winner.cracked .egg-prize {
+  font-size: 36px;
+  animation: prizeWin 0.6s 0.15s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+@keyframes prizeWin {
+  0% { transform: translateX(-50%) scale(0) translateY(10px); opacity: 0; }
+  60% { transform: translateX(-50%) scale(1.5) translateY(-40px); opacity: 1; }
+  100% { transform: translateX(-50%) scale(1.3) translateY(-35px); opacity: 1; filter: drop-shadow(0 0 16px rgba(255,215,0,0.8)); }
+}
+
+/* Floating geometric shapes */
+.slide-title .geo {
+  position: absolute;
+  border-radius: 4px;
+  opacity: 0.06;
+  pointer-events: none;
+}
+.slide-title .geo-1 {
+  width: 300px; height: 300px;
+  border: 2px solid var(--chartreuse);
+  top: -60px; right: 10%;
+  transform: rotate(15deg);
+  animation: float 8s ease-in-out infinite;
+}
+.slide-title .geo-2 {
+  width: 200px; height: 200px;
+  background: var(--sky);
+  bottom: -40px; left: 8%;
+  transform: rotate(-10deg);
+  animation: float 10s ease-in-out infinite reverse;
+}
+.slide-title .geo-3 {
+  width: 150px; height: 150px;
+  border: 2px solid var(--flax);
+  top: 30%; left: 5%;
+  border-radius: 50%;
+  animation: float 12s ease-in-out infinite;
+}
+
+/* ============================================
+   SLIDE 2 — PLACEHOLDER (Agenda)
+   ============================================ */
+.slide-agenda {
+  background: var(--suede);
+}
+.slide-agenda .content {
+  max-width: 900px;
+  padding: 60px 40px;
+}
+.slide-agenda .section-label {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--sky);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.slide-agenda h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(36px, 5vw, 72px);
+  color: var(--tuxedo);
+  line-height: 1;
+  margin-bottom: 48px;
+}
+.slide-agenda .agenda-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.slide-agenda .agenda-item {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(40, 40, 40, 0.08);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.slide-agenda .agenda-item:hover {
+  padding-left: 12px;
+  border-color: var(--sky);
+}
+.slide-agenda .agenda-num {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 32px;
+  color: var(--chartreuse);
+  min-width: 50px;
+}
+.slide-agenda .agenda-text {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 20px;
+  color: var(--tuxedo);
+}
+.slide-agenda .agenda-text small {
+  display: block;
+  font-weight: 400;
+  font-size: 14px;
+  color: rgba(40,40,40,0.4);
+  margin-top: 4px;
+}
+
+/* ============================================
+   SLIDE 3 — ORG MOVES
+   ============================================ */
+.slide-org.active {
+  background: var(--tuxedo);
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  display: block;
+  opacity: 1;
+  pointer-events: auto;
+}
+.slide-org::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 50% 40% at 15% 50%, rgba(58, 147, 207, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 85% 50%, rgba(198, 224, 5, 0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+.slide-org .org-header {
+  position: absolute;
+  top: 48px;
+  left: 0; right: 0;
+  text-align: center;
+  z-index: 10;
+}
+.slide-org .org-header .section-label {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--sky);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.slide-org .org-header h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(36px, 5vw, 64px);
+  color: var(--pearl);
+  line-height: 1;
+}
+
+/* The track area */
+.org-stage {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+}
+
+/* Column labels */
+.org-col-label {
+  position: absolute;
+  top: 160px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.2);
+}
+.org-col-label.from { left: 12%; }
+.org-col-label.to { right: 12%; text-align: right; }
+
+/* Dashed lane lines */
+.org-lane {
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  border-top: 2px dashed rgba(255,255,255,0.06);
+}
+
+/* Person card */
+.org-person {
+  position: absolute;
+  left: 8%;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: left 1.2s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.3s;
+  z-index: 5;
+}
+.org-person.moved {
+  left: calc(92% - 280px);
+}
+.org-person .avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--chartreuse);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  flex-shrink: 0;
+}
+.org-person .person-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.org-person .person-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--pearl);
+  white-space: nowrap;
+}
+.org-person .person-role {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 13px;
+  color: rgba(255,255,255,0.4);
+  white-space: nowrap;
+  transition: all 0.4s 0.8s;
+}
+.org-person.moved .person-role {
+  color: var(--chartreuse);
+  font-weight: 700;
+}
+
+/* New role badge — hidden until moved */
+.org-person .new-role {
+  display: inline-block;
+  padding: 4px 14px;
+  background: var(--chartreuse);
+  color: var(--tuxedo);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 20px;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.4s 1.2s, transform 0.4s 1.2s;
+}
+.org-person.moved .new-role {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Trail particles */
+.org-person::after {
+  content: '';
+  position: absolute;
+  left: 36px; top: 36px;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--chartreuse);
+  opacity: 0;
+  transition: opacity 0.3s;
+  box-shadow: 0 0 12px var(--chartreuse);
+}
+.org-person.moving::after {
+  opacity: 0.6;
+  animation: trail 0.4s ease-out infinite;
+}
+
+/* Launch button */
+.org-launch {
+  position: absolute;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  padding: 14px 36px;
+  background: var(--chartreuse);
+  color: var(--tuxedo);
+  border: none;
+  border-radius: 40px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s, opacity 0.4s;
+  box-shadow: 0 4px 24px rgba(198, 224, 5, 0.3);
+}
+.org-launch:hover {
+  transform: translateX(-50%) scale(1.05);
+  box-shadow: 0 6px 32px rgba(198, 224, 5, 0.5);
+}
+.org-launch.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes trail {
+  0%   { box-shadow: 0 0 12px var(--chartreuse), -20px 0 8px var(--chartreuse), -40px 0 4px var(--chartreuse); }
+  100% { box-shadow: 0 0 0px transparent, -30px 0 0px transparent, -60px 0 0px transparent; }
+}
+
+/* ============================================
+   SLIDE 4 — SECTION DIVIDER
+   ============================================ */
+.slide-section {
+  position: absolute;
+  inset: 0;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.slide-section .section-photo {
+  margin-top: 32px;
+  width: clamp(360px, 55vw, 720px);
+  border-radius: 14px;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.slide-section .section-photo:hover {
+  transform: scale(1.03) rotate(-1deg);
+}
+.slide-section.bg-sky { background: var(--sky); }
+.slide-section.bg-midnight { background: var(--midnight); }
+.slide-section .section-num {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 16px;
+}
+.slide-section .section-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(56px, 8vw, 110px);
+  color: var(--pearl);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+}
+.slide-section .section-rule {
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--chartreuse), var(--flax), var(--chartreuse));
+  background-size: 200% 100%;
+  margin: 28px auto 0;
+  border-radius: 2px;
+  animation: shimmer 3s linear infinite;
+}
+
+/* ============================================
+   SLIDE 5 — BDR / MDR SPLIT PANEL
+   ============================================ */
+.slide-bdr {
+  position: absolute;
+  inset: 0;
+  display: flex !important;
+  flex-direction: row !important;
+  overflow: hidden;
+  align-items: stretch !important;
+  justify-content: stretch !important;
+}
+
+/* Split halves */
+.team-half {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 48px 40px;
+  position: relative;
+}
+.team-half.bdr-side {
+  background: var(--midnight);
+}
+.team-half.mdr-side {
+  background: var(--tuxedo);
+}
+
+/* Divider line between halves */
+.team-half.bdr-side::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 10%;
+  bottom: 10%;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.15), transparent);
+}
+
+/* Team photo */
+.team-photo {
+  width: clamp(200px, 28vw, 380px);
+  height: auto;
+  border-radius: 14px;
+  border: 2px solid rgba(255,255,255,0.12);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.3);
+  object-fit: cover;
+  margin-bottom: 16px;
+}
+
+/* Team header */
+.team-badge {
+  display: inline-block;
+  padding: 6px 20px;
+  border-radius: 30px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 32px;
+}
+.bdr-side .team-badge {
+  background: rgba(58, 147, 207, 0.15);
+  color: var(--sky);
+  border: 1px solid rgba(58, 147, 207, 0.3);
+}
+.mdr-side .team-badge {
+  background: rgba(198, 224, 5, 0.12);
+  color: var(--chartreuse);
+  border: 1px solid rgba(198, 224, 5, 0.25);
+}
+
+/* Big stat rows */
+.team-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 40px;
+  width: 100%;
+  max-width: 420px;
+}
+.stat-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: center;
+  padding: 16px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.stat-label {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 11px;
+  color: rgba(255,255,255,0.35);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  order: 2;
+}
+.stat-big {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(40px, 5vw, 64px);
+  color: var(--pearl);
+  line-height: 1;
+  order: 1;
+}
+.bdr-side .stat-big.accent {
+  background: linear-gradient(135deg, var(--sky), #64b5f6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.mdr-side .stat-big.accent {
+  background: linear-gradient(135deg, var(--chartreuse), #d4e157);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Donut in the middle of each half */
+.team-donut {
+  width: 160px;
+  height: 160px;
+  position: relative;
+  margin: 12px 0;
+}
+.team-donut svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+.team-donut .donut-track {
+  fill: none;
+  stroke: rgba(255,255,255,0.06);
+  stroke-width: 10;
+}
+.team-donut .donut-fill {
+  fill: none;
+  stroke-width: 10;
+  stroke-linecap: round;
+  stroke-dasharray: 251.3;
+  stroke-dashoffset: 251.3;
+  transition: stroke-dashoffset 1.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  filter: drop-shadow(0 0 10px currentColor);
+}
+.donut-fill.sky { stroke: var(--sky); color: var(--sky); }
+.donut-fill.chart { stroke: var(--chartreuse); color: var(--chartreuse); }
+.team-donut .donut-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.team-donut .donut-pct {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 28px;
+  color: var(--pearl);
+  line-height: 1;
+}
+.team-donut .donut-sub {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 10px;
+  color: rgba(255,255,255,0.35);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 4px;
+}
+
+/* Entrance animations */
+.slide-bdr.active .team-half.bdr-side { opacity: 0; animation: slideInFromLeft 0.6s 0.1s ease-out forwards; }
+.slide-bdr.active .team-half.mdr-side { opacity: 0; animation: fadeUp 0.6s 0.3s ease-out forwards; }
+.slide-bdr .team-half { opacity: 0; }
+
+/* ARR bottom bar */
+.team-arr {
+  margin-top: 24px;
+  text-align: center;
+}
+.team-arr .arr-label {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 11px;
+  color: rgba(255,255,255,0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 4px;
+}
+.team-arr .arr-num {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(28px, 3vw, 44px);
+  line-height: 1;
+}
+.bdr-side .arr-num {
+  background: linear-gradient(135deg, var(--sky), #64b5f6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.mdr-side .arr-num {
+  background: linear-gradient(135deg, var(--chartreuse), #d4e157);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================
+   SLIDE 6 — MICHAEL WYNKOOP HIGHLIGHT
+   ============================================ */
+.slide-michael {
+  position: absolute;
+  inset: 0;
+  background: var(--midnight);
+  display: block !important;
+  overflow: hidden;
+}
+.slide-michael::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 80% at 30% 60%, rgba(198, 224, 5, 0.1) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 80% 30%, rgba(58, 147, 207, 0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+.michael-layout {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  z-index: 5;
+}
+.michael-image-side {
+  flex: 1.6;
+  position: relative;
+  overflow: hidden;
+}
+.michael-image-side img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+.michael-image-side::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, transparent 60%, var(--midnight) 100%);
+  pointer-events: none;
+}
+.michael-content-side {
+  flex: 0.6;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px 60px 60px 40px;
+  position: relative;
+}
+.michael-eyebrow {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--chartreuse);
+  margin-bottom: 12px;
+}
+.michael-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(40px, 5vw, 72px);
+  color: var(--pearl);
+  line-height: 0.95;
+  margin-bottom: 32px;
+}
+.michael-stats {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 36px;
+}
+.michael-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.michael-stat .stat-value {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(36px, 4vw, 56px);
+  color: var(--pearl);
+  line-height: 1;
+}
+.michael-stat .stat-value.accent { color: var(--chartreuse); }
+.michael-stat .stat-label {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.michael-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  background: rgba(198, 224, 5, 0.12);
+  border: 1px solid rgba(198, 224, 5, 0.3);
+  border-radius: 40px;
+  width: fit-content;
+}
+.michael-badge span {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--chartreuse);
+  letter-spacing: 0.02em;
+}
+.michael-badge {
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.25s ease;
+}
+.michael-badge:hover {
+  transform: scale(1.05);
+  background: rgba(198, 224, 5, 0.2);
+}
+
+/* ============================================
+   SLIDE 7 — PRESIDENTS CLUB (F1 port)
+   ============================================ */
+.slide-pclub {
+  position: absolute;
+  inset: 0;
+  background: #0d0d0d;
+  background-image:
+    repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(255,255,255,.02) 2px, rgba(255,255,255,.02) 4px),
+    repeating-linear-gradient(-45deg, transparent, transparent 2px, rgba(255,255,255,.02) 2px, rgba(255,255,255,.02) 4px);
+  display: block !important;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.slide-pclub .pc-ambient { position: absolute; border-radius: 50%; pointer-events: none; filter: blur(100px); z-index: 0; }
+.slide-pclub .pc-ambient-1 { top: -15%; right: -10%; width: 700px; height: 700px; background: radial-gradient(circle, rgba(225,6,0,0.15) 0%, transparent 70%); }
+.slide-pclub .pc-ambient-2 { bottom: -10%; left: -10%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(255,215,0,0.08) 0%, transparent 70%); }
+
+.slide-pclub .pc-wrap {
+  position: relative; z-index: 1;
+  max-width: 1400px; margin: 0 auto;
+  padding: 40px 40px 60px;
+}
+
+/* Header */
+.slide-pclub .pc-head {
+  margin-bottom: 32px; padding-bottom: 24px;
+  border-bottom: 3px solid #E10600; position: relative;
+}
+.slide-pclub .pc-head::after { content:''; position:absolute; bottom:-3px; left:0; width:60px; height:3px; background:#FFD700; }
+.slide-pclub .pc-eyebrow {
+  font-family: 'Rajdhani', sans-serif; font-size: 13px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 6px; color: #E10600;
+  margin-bottom: 16px; display: flex; align-items: center; gap: 12px;
+}
+.slide-pclub .pc-eyebrow::before { content:''; width:40px; height:2px; background:#E10600; }
+.slide-pclub .pc-title {
+  font-family: 'Orbitron', monospace; font-size: clamp(36px, 6vw, 72px);
+  font-weight: 900; letter-spacing: 2px; line-height: 1; margin-bottom: 12px;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #FFFFFF 0%, #C0C0C0 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.slide-pclub .pc-title em {
+  font-style: normal; color: #E10600;
+  -webkit-text-fill-color: #E10600; text-shadow: 0 0 20px rgba(225,6,0,0.5);
+}
+.slide-pclub .pc-sub {
+  font-family: 'Rajdhani', sans-serif; font-size: 16px;
+  color: rgba(255,255,255,0.6); font-weight: 500; letter-spacing: 1px;
+}
+.slide-pclub .pc-live { display:inline-block; width:7px; height:7px; background:#4caf50; border-radius:50%; margin-right:6px; vertical-align:middle; animation: pcPulse 2s ease-in-out infinite; }
+
+/* KPI Row */
+.slide-pclub .pc-kpis { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:24px; }
+.slide-pclub .pc-kpi {
+  background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+  border: 2px solid rgba(255,255,255,0.1); border-left: 4px solid;
+  padding: 20px 18px; position: relative; overflow: hidden;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.25s ease;
+}
+.slide-pclub .pc-kpi:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255,255,255,0.2);
+}
+.slide-pclub .pc-kpi:nth-child(1) { border-left-color: #E10600; }
+.slide-pclub .pc-kpi:nth-child(2) { border-left-color: #00D2BE; }
+.slide-pclub .pc-kpi:nth-child(3) { border-left-color: #FF8700; }
+.slide-pclub .pc-kpi:nth-child(4) { border-left-color: #FFD700; }
+.slide-pclub .pc-kpi-label {
+  font-family: 'Rajdhani', sans-serif; font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.45); margin-bottom: 10px;
+}
+.slide-pclub .pc-kpi-val {
+  font-family: 'Orbitron', monospace; font-size: clamp(24px, 3vw, 44px);
+  font-weight: 900; line-height: 1; color: #fff; text-shadow: 0 0 10px rgba(225,6,0,0.3);
+}
+.slide-pclub .pc-kpi-sub {
+  font-family: 'Rajdhani', sans-serif; font-size: 12px; font-weight: 600;
+  color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px; margin-top: 6px;
+}
+
+/* Race Track */
+.slide-pclub .pc-track-section {
+  background: linear-gradient(180deg, rgba(26,26,26,0.4) 0%, rgba(13,13,13,0.8) 100%);
+  border: 2px solid rgba(255,255,255,0.1); border-left: 4px solid #E10600;
+  padding: 28px 20px; position: relative; overflow: hidden;
+}
+.slide-pclub .pc-track-section::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:100%;
+  background: repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(255,255,255,0.02) 40px, rgba(255,255,255,0.02) 80px);
+  pointer-events: none;
+}
+.slide-pclub .pc-track-head {
+  display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; position:relative; z-index:1;
+}
+.slide-pclub .pc-track-title {
+  font-family: 'Orbitron', monospace; font-size: 20px; font-weight: 900;
+  text-transform: uppercase; letter-spacing: 3px; color: #fff;
+}
+.slide-pclub .pc-track-sub {
+  font-family: 'Rajdhani', sans-serif; font-size: 13px;
+  color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 2px;
+}
+.slide-pclub .pc-track {
+  position: relative; background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%);
+  border: 3px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 40px 20px;
+  min-height: 420px;
+}
+.slide-pclub .pc-lane {
+  position:relative; height:56px; margin-bottom:10px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.02) 100%);
+  border-left: 3px dashed rgba(255,255,255,0.15); border-bottom: 1px solid rgba(255,255,255,0.08);
+  display:flex; align-items:center; overflow:visible;
+}
+.slide-pclub .pc-lane:last-child { margin-bottom:0; }
+.slide-pclub .pc-car {
+  position:absolute; left:0; display:flex; align-items:center; gap:12px;
+  padding:8px 16px 8px 8px; background: linear-gradient(135deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.6) 100%);
+  border:2px solid; border-radius:4px; z-index:10;
+  animation: pcCarEnter 1s ease-out forwards;
+}
+.slide-pclub .pc-car.p1 { border-color:#FFD700; box-shadow: 0 0 20px rgba(255,215,0,0.4); }
+.slide-pclub .pc-car.p2 { border-color:#C0C0C0; box-shadow: 0 0 15px rgba(192,192,192,0.3); }
+.slide-pclub .pc-car.p3 { border-color:#CD7F32; box-shadow: 0 0 15px rgba(205,127,50,0.3); }
+.slide-pclub .pc-car.px { border-color:rgba(255,255,255,0.1); }
+.slide-pclub .pc-car-pos {
+  position:absolute; left:-30px; width:24px; height:24px;
+  background:#E10600; color:#fff; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-weight:900; font-size:12px; font-family:'Orbitron',monospace;
+}
+.slide-pclub .pc-car-icon {
+  width:40px; height:40px; display:flex; align-items:center; justify-content:center;
+  font-size:24px; filter: drop-shadow(0 0 8px currentColor);
+}
+.slide-pclub .pc-car-name {
+  font-family:'Rajdhani',sans-serif; font-weight:700; font-size:14px;
+  color:#fff; text-transform:uppercase; letter-spacing:1px;
+}
+.slide-pclub .pc-car-score {
+  font-family:'Orbitron',monospace; font-size:18px; font-weight:700; color:#E10600;
+}
+.slide-pclub .pc-finish {
+  position:absolute; right:0; top:0; bottom:0; width:40px;
+  background: repeating-linear-gradient(45deg, #000, #000 10px, #fff 10px, #fff 20px);
+  opacity:0.3;
+}
+@keyframes pcCarEnter { from { transform:translateX(-100px); opacity:0; } to { transform:translateX(0); opacity:1; } }
+@keyframes pcPulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+/* Animated count-up */
+.count-up {
+  transition: none;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(var(--r, 15deg)); }
+  50%      { transform: translateY(-20px) rotate(var(--r, 15deg)); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 20px rgba(198, 224, 5, 0.2); }
+  50% { box-shadow: 0 0 40px rgba(198, 224, 5, 0.4), 0 0 60px rgba(198, 224, 5, 0.1); }
+}
+@keyframes slideInFromLeft {
+  from { opacity: 0; transform: translateX(-40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.85); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Slide transitions — transform + opacity for depth */
+.slide {
+  transform: scale(0.96);
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.slide.active {
+  transform: scale(1);
+}
+
+/* Staggered entrance for agenda items */
+.slide-agenda.active .agenda-item {
+  opacity: 0;
+  animation: slideInFromLeft 0.5s ease-out forwards;
+}
+.slide-agenda.active .agenda-item:nth-child(1) { animation-delay: 0.1s; }
+.slide-agenda.active .agenda-item:nth-child(2) { animation-delay: 0.2s; }
+.slide-agenda.active .agenda-item:nth-child(3) { animation-delay: 0.3s; }
+.slide-agenda.active .agenda-item:nth-child(4) { animation-delay: 0.4s; }
+.slide-agenda.active .agenda-item:nth-child(5) { animation-delay: 0.5s; }
+.slide-agenda .agenda-item { opacity: 0; }
+
+/* Section divider entrance animation */
+.slide-section.active .section-num { opacity: 0; animation: fadeUp 0.5s 0.1s ease-out forwards; }
+.slide-section.active .section-title { opacity: 0; animation: scaleIn 0.6s 0.2s ease-out forwards; }
+.slide-section.active .section-rule { opacity: 0; animation: fadeUp 0.5s 0.5s ease-out forwards; }
+.slide-section .section-num,
+.slide-section .section-title,
+.slide-section .section-rule { opacity: 0; }
+
+/* Michael slide entrance */
+.slide-michael.active .michael-image-side { opacity: 0; animation: fadeUp 0.8s 0.1s ease-out forwards; }
+.slide-michael.active .michael-eyebrow { opacity: 0; animation: slideInFromLeft 0.5s 0.3s ease-out forwards; }
+.slide-michael.active .michael-name { opacity: 0; animation: slideInFromLeft 0.6s 0.4s ease-out forwards; }
+.slide-michael.active .michael-stats { opacity: 0; animation: fadeUp 0.5s 0.6s ease-out forwards; }
+.slide-michael.active .michael-badge { opacity: 0; animation: scaleIn 0.4s 0.9s ease-out forwards; }
+.slide-michael .michael-image-side,
+.slide-michael .michael-eyebrow,
+.slide-michael .michael-name,
+.slide-michael .michael-stats,
+.slide-michael .michael-badge { opacity: 0; }
+
+/* (BDR split-panel animations are in the slide-5 CSS block) */
+
+/* Agenda item hover micro-interaction */
+.slide-agenda .agenda-item:hover .agenda-num {
+  transform: scale(1.15);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Nav button micro-interactions */
+.nav button {
+  transition: background 0.2s, color 0.2s, transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.nav button:hover {
+  transform: scale(1.1);
+}
+.nav button:active {
+  transform: scale(0.92);
+}
+
+/* Launch button pulse */
+.org-launch {
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+.org-launch:hover {
+  animation: none;
+}
+
+/* Reduced motion — respect user preference */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================
+   SLIDE 9 — ENABLEMENT UPDATES
+   ============================================ */
+.slide-enablement {
+  position: absolute;
+  inset: 0;
+  background: var(--tuxedo);
+  display: block !important;
+  overflow: hidden;
+}
+.slide-enablement::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 70% at 25% 50%, rgba(58, 147, 207, 0.1) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 80% 30%, rgba(198, 224, 5, 0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+.enablement-layout {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  z-index: 5;
+}
+.enablement-image-side {
+  flex: 1.2;
+  position: relative;
+  overflow: hidden;
+}
+.enablement-image-side img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+.enablement-image-side::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, transparent 50%, var(--tuxedo) 100%);
+  pointer-events: none;
+}
+.enablement-content-side {
+  flex: 0.8;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px 60px 60px 40px;
+  position: relative;
+}
+.enablement-eyebrow {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--sky);
+  margin-bottom: 16px;
+}
+.enablement-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(40px, 5vw, 72px);
+  color: var(--pearl);
+  line-height: 0.95;
+  margin-bottom: 24px;
+}
+.enablement-rule {
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--chartreuse), var(--flax), var(--chartreuse));
+  background-size: 200% 100%;
+  border-radius: 2px;
+  animation: shimmer 3s linear infinite;
+}
+
+/* Enablement entrance animations */
+.slide-enablement.active .enablement-image-side { opacity: 0; animation: fadeUp 0.8s 0.1s ease-out forwards; }
+.slide-enablement.active .enablement-eyebrow { opacity: 0; animation: slideInFromLeft 0.5s 0.3s ease-out forwards; }
+.slide-enablement.active .enablement-title { opacity: 0; animation: slideInFromLeft 0.6s 0.4s ease-out forwards; }
+.slide-enablement.active .enablement-rule { opacity: 0; animation: fadeUp 0.5s 0.6s ease-out forwards; }
+.slide-enablement .enablement-image-side,
+.slide-enablement .enablement-eyebrow,
+.slide-enablement .enablement-title,
+.slide-enablement .enablement-rule { opacity: 0; }
+
+/* ============================================
+   SLIDE 10 — GIFTING COLLAGE
+   ============================================ */
+.slide-gifting {
+  position: absolute;
+  inset: 0;
+  background: var(--suede);
+  display: block !important;
+  overflow: hidden;
+}
+.slide-gifting .gifting-header {
+  position: absolute;
+  top: 36px;
+  left: 0; right: 0;
+  text-align: center;
+  z-index: 10;
+}
+.slide-gifting .gifting-header .section-label {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--sky);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.slide-gifting .gifting-header h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(32px, 4vw, 56px);
+  color: var(--tuxedo);
+  line-height: 1;
+}
+.slide-gifting .gifting-header p {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 16px;
+  color: rgba(40, 40, 40, 0.5);
+  margin-top: 8px;
+}
+
+/* Collage grid — asymmetric mosaic */
+.collage {
+  position: absolute;
+  top: 140px;
+  left: 3%;
+  right: 3%;
+  bottom: 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 14px;
+}
+.collage-item {
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
+}
+.collage-item:hover {
+  transform: scale(1.03);
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.18);
+  z-index: 5;
+}
+.collage-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.collage-item {
+  background: #fff;
+}
+/* 3x2 clean grid — no spanning needed with 6 items */
+
+/* Collage item labels */
+.collage-item .collage-label {
+  position: absolute;
+  bottom: 0;
+  left: 0; right: 0;
+  padding: 24px 16px 14px;
+  background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 13px;
+  color: #fff;
+  letter-spacing: 0.04em;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.3s, transform 0.3s;
+}
+.collage-item:hover .collage-label {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Entrance stagger */
+.slide-gifting.active .collage-item {
+  opacity: 0;
+  animation: scaleIn 0.5s ease-out forwards;
+}
+.slide-gifting.active .collage-item:nth-child(1) { animation-delay: 0.1s; }
+.slide-gifting.active .collage-item:nth-child(2) { animation-delay: 0.2s; }
+.slide-gifting.active .collage-item:nth-child(3) { animation-delay: 0.3s; }
+.slide-gifting.active .collage-item:nth-child(4) { animation-delay: 0.4s; }
+.slide-gifting.active .collage-item:nth-child(5) { animation-delay: 0.5s; }
+.slide-gifting.active .collage-item:nth-child(6) { animation-delay: 0.6s; }
+.slide-gifting .collage-item { opacity: 0; }
+
+/* ============================================
+   SLIDE 13 — SALES NUMBERS
+   ============================================ */
+.slide-sales {
+  position: absolute;
+  inset: 0;
+  background: var(--tuxedo);
+  display: block !important;
+  overflow: hidden;
+}
+.slide-sales::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 30%, rgba(58, 147, 207, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 80% 70%, rgba(198, 224, 5, 0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+.sales-inner {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  padding: 36px 5% 30px;
+}
+.sales-head {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.sales-head .section-label {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--sky);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.sales-head h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(28px, 4vw, 48px);
+  color: var(--pearl);
+  line-height: 1;
+}
+
+/* Hero number */
+.sales-hero {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.sales-hero .hero-amount {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(48px, 7vw, 96px);
+  line-height: 1;
+  background: linear-gradient(135deg, var(--chartreuse), var(--flax));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.sales-hero .hero-sub {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 14px;
+  color: rgba(255,255,255,0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-top: 6px;
+}
+
+/* Stats grid */
+.sales-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.sales-stat {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 14px;
+  padding: 20px 16px;
+  text-align: center;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.sales-stat:hover {
+  transform: translateY(-3px);
+}
+.sales-stat .stat-num {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(28px, 3vw, 44px);
+  color: var(--pearl);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.sales-stat .stat-num.sky-text { color: var(--sky); }
+.sales-stat .stat-num.chart-text { color: var(--chartreuse); }
+.sales-stat .stat-desc {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 11px;
+  color: rgba(255,255,255,0.35);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* Top AEs + Big Deals row */
+.sales-bottom {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  flex: 1;
+}
+.sales-panel {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 14px;
+  padding: 20px 24px;
+}
+.sales-panel .panel-title {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.35);
+  margin-bottom: 16px;
+}
+.sales-panel .panel-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.sales-panel .panel-row:last-child { border-bottom: none; }
+.panel-rank {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--chartreuse);
+  margin-right: 12px;
+}
+.panel-name {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--pearl);
+  flex: 1;
+}
+.panel-val {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--sky);
+}
+
+/* Entrance */
+.slide-sales.active .sales-hero { opacity: 0; animation: scaleIn 0.6s 0.1s ease-out forwards; }
+.slide-sales.active .sales-grid { opacity: 0; animation: fadeUp 0.5s 0.3s ease-out forwards; }
+.slide-sales.active .sales-bottom { opacity: 0; animation: fadeUp 0.5s 0.5s ease-out forwards; }
+.slide-sales .sales-hero,
+.slide-sales .sales-grid,
+.slide-sales .sales-bottom { opacity: 0; }
+
+/* ============================================
+   SLIDE 14 — WHO WE SOLD TO
+   ============================================ */
+.slide-practice {
+  position: absolute;
+  inset: 0;
+  background: var(--midnight);
+  display: block !important;
+  overflow: hidden;
+}
+.slide-practice::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 80% 30%, rgba(58, 147, 207, 0.1) 0%, transparent 60%);
+  pointer-events: none;
+}
+.practice-inner {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  padding: 36px 6% 30px;
+}
+.practice-head {
+  text-align: center;
+  margin-bottom: 32px;
+}
+.practice-head .section-label {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--sky);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.practice-head h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(28px, 4vw, 48px);
+  color: var(--pearl);
+  line-height: 1;
+}
+
+/* Bar rows */
+.practice-bars {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+}
+.pbar-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.pbar-label {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  width: 180px;
+  text-align: right;
+  flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.pbar-track {
+  flex: 1;
+  height: 32px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+.pbar-fill {
+  height: 100%;
+  border-radius: 6px;
+  width: 0%;
+  transition: width 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 12px;
+}
+.pbar-fill .pbar-val {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--tuxedo);
+  white-space: nowrap;
+}
+/* Color stops for bars */
+.pbar-fill.bar-pi {
+  background: linear-gradient(90deg, var(--chartreuse), #d4e157);
+  box-shadow: 0 0 16px rgba(198, 224, 5, 0.25);
+}
+.pbar-fill.bar-mid {
+  background: linear-gradient(90deg, var(--sky), #64b5f6);
+  box-shadow: 0 0 16px rgba(58, 147, 207, 0.2);
+}
+.pbar-fill.bar-low {
+  background: linear-gradient(90deg, var(--flax), #f0e68c);
+  box-shadow: 0 0 12px rgba(238, 220, 130, 0.2);
+}
+
+/* Entrance stagger */
+.slide-practice.active .pbar-row {
+  opacity: 0;
+  animation: slideInFromLeft 0.4s ease-out forwards;
+}
+.slide-practice.active .pbar-row:nth-child(1) { animation-delay: 0.1s; }
+.slide-practice.active .pbar-row:nth-child(2) { animation-delay: 0.15s; }
+.slide-practice.active .pbar-row:nth-child(3) { animation-delay: 0.2s; }
+.slide-practice.active .pbar-row:nth-child(4) { animation-delay: 0.25s; }
+.slide-practice.active .pbar-row:nth-child(5) { animation-delay: 0.3s; }
+.slide-practice.active .pbar-row:nth-child(6) { animation-delay: 0.35s; }
+.slide-practice.active .pbar-row:nth-child(7) { animation-delay: 0.4s; }
+.slide-practice.active .pbar-row:nth-child(8) { animation-delay: 0.45s; }
+.slide-practice.active .pbar-row:nth-child(9) { animation-delay: 0.5s; }
+.slide-practice .pbar-row { opacity: 0; }
+
+/* ============================================
+   KEYBOARD HINT
+   ============================================ */
+.keyboard-hint {
+  position: fixed;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: rgba(255,255,255,0.25);
+  letter-spacing: 0.1em;
+  z-index: 999;
+  transition: opacity 0.4s;
+}
+</style>
+</head>
+<body>
+
+<!-- Progress Bar -->
+<div class="progress" id="progress"></div>
+
+<!-- Slide Deck -->
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: Title -->
+  <div class="slide slide-title active" data-slide="1">
+    <div class="geo geo-1"></div>
+    <div class="geo geo-2"></div>
+    <div class="geo geo-3"></div>
+    <div class="content">
+      <img src="assets/GOAT20White.svg" alt="Rankings GOAT" class="logo">
+      <h1>Sales <span>All Hands</span></h1>
+      <p class="subtitle">Q2 2026 Kickoff</p>
+      <img src="bunny.png" alt="The team" class="bunny-photo">
+    </div>
+    <div class="egg-field" id="eggField"></div>
+  </div>
+
+  <!-- SLIDE 2: Agenda -->
+  <div class="slide slide-agenda" data-slide="2">
+    <div class="content">
+      <p class="section-label">Today's Agenda</p>
+      <h2>What We're Covering</h2>
+      <ul class="agenda-list">
+        <li class="agenda-item">
+          <span class="agenda-num">01</span>
+          <span class="agenda-text">Changes & Promotions</span>
+        </li>
+        <li class="agenda-item">
+          <span class="agenda-num">02</span>
+          <span class="agenda-text">Business Development</span>
+        </li>
+        <li class="agenda-item">
+          <span class="agenda-num">03</span>
+          <span class="agenda-text">Enablement</span>
+        </li>
+        <li class="agenda-item">
+          <span class="agenda-num">04</span>
+          <span class="agenda-text">Sales</span>
+        </li>
+        <li class="agenda-item">
+          <span class="agenda-num">05</span>
+          <span class="agenda-text">Revenue</span>
+        </li>
+      </ul>
+    </div>
+    <div class="egg-field" id="eggField2"></div>
+    </div>
+
+  <!-- SLIDE 3: Org Moves -->
+  <div class="slide slide-org" data-slide="3">
+    <div class="org-header">
+      <p class="section-label">Team Updates</p>
+      <h2>On the Move</h2>
+    </div>
+
+    <div class="org-stage">
+      <span class="org-col-label from">Current Role</span>
+      <span class="org-col-label to">New Role</span>
+
+      <div class="org-lane" style="top: 32%"></div>
+      <div class="org-lane" style="top: 46%"></div>
+      <div class="org-lane" style="top: 60%"></div>
+      <div class="org-lane" style="top: 74%"></div>
+
+      <!-- Tyler -->
+      <div class="org-person" id="person-tyler" style="top: calc(32% - 36px)">
+        <img src="Tyler.jpg" alt="Tyler Farr" class="avatar">
+        <div class="person-info">
+          <span class="person-name">Tyler Farr</span>
+          <span class="person-role">Partnership Program Lead</span>
+          <span class="new-role">Opening Partnerships</span>
+        </div>
+      </div>
+
+      <!-- Megan -->
+      <div class="org-person" id="person-megan" style="top: calc(46% - 36px)">
+        <img src="MeganH.png" alt="Megan H" class="avatar">
+        <div class="person-info">
+          <span class="person-name">Megan H.</span>
+          <span class="person-role">MDR Lead</span>
+          <span class="new-role">Stepping into MDR Lead</span>
+        </div>
+      </div>
+
+      <!-- Sydney -->
+      <div class="org-person" id="person-sydney" style="top: calc(60% - 36px)">
+        <img src="sydney.png" alt="Sydney Darrow" class="avatar">
+        <div class="person-info">
+          <span class="person-name">Sydney Darrow</span>
+          <span class="person-role">MDR Team</span>
+          <span class="new-role">Moving to MDR</span>
+        </div>
+      </div>
+
+      <!-- Simon -->
+      <div class="org-person" id="person-simon" style="top: calc(74% - 36px)">
+        <img src="Simon.jpg" alt="Simon" class="avatar">
+        <div class="person-info">
+          <span class="person-name">Simon</span>
+          <span class="person-role">Legal Growth Strategist</span>
+          <span class="new-role">Legal Growth Strategist</span>
+        </div>
+      </div>
+    </div>
+
+    <button class="org-launch" id="orgLaunch">Make the Moves</button>
+  </div>
+
+  <!-- SLIDE 4: Section Divider — Business Development -->
+  <div class="slide slide-section bg-sky" data-slide="4">
+    <div>
+      <p class="section-num">02</p>
+      <h2 class="section-title">Business<br>Development</h2>
+      <div class="section-rule"></div>
+      <img src="Bring.png" alt="Bring It On" class="section-photo">
+    </div>
+    <div class="egg-field" id="eggField4"></div>
+  </div>
+
+  <!-- SLIDE 5: BDR / MDR Split -->
+  <div class="slide slide-bdr" data-slide="5">
+
+    <!-- BDR — Left Half -->
+    <div class="team-half bdr-side">
+      <img src="BDR.png" alt="BDR" class="team-photo">
+      <div class="team-badge">BDR</div>
+      <div class="team-stats">
+        <div class="stat-row">
+          <span class="stat-label">Sets</span>
+          <span class="stat-big count-up" data-target="209">0</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Holds</span>
+          <span class="stat-big count-up" data-target="133">0</span>
+        </div>
+      </div>
+      <div class="team-donut">
+        <svg viewBox="0 0 90 90">
+          <circle class="donut-track" cx="45" cy="45" r="40"/>
+          <circle class="donut-fill sky" cx="45" cy="45" r="40" data-percent="82"/>
+        </svg>
+        <div class="donut-center">
+          <span class="donut-pct count-up" data-target="82" data-suffix="%">0%</span>
+          <span class="donut-sub">Show Rate</span>
+        </div>
+      </div>
+      <div class="team-arr">
+        <div class="arr-label">ARR Influence</div>
+        <div class="arr-num count-up" data-target="799500" data-prefix="$" data-format="currency">$0</div>
+      </div>
+    </div>
+
+    <!-- MDR — Right Half -->
+    <div class="team-half mdr-side">
+      <img src="MDR.png" alt="MDR" class="team-photo">
+      <div class="team-badge">MDR</div>
+      <div class="team-stats">
+        <div class="stat-row">
+          <span class="stat-label">Sets</span>
+          <span class="stat-big count-up" data-target="82">0</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Holds</span>
+          <span class="stat-big count-up" data-target="67">0</span>
+        </div>
+      </div>
+      <div class="team-donut">
+        <svg viewBox="0 0 90 90">
+          <circle class="donut-track" cx="45" cy="45" r="40"/>
+          <circle class="donut-fill chart" cx="45" cy="45" r="40" data-percent="91.6"/>
+        </svg>
+        <div class="donut-center">
+          <span class="donut-pct count-up" data-target="91.6" data-suffix="%" data-decimals="1">0%</span>
+          <span class="donut-sub">Show Rate</span>
+        </div>
+      </div>
+      <div class="team-arr">
+        <div class="arr-label">ARR Influence</div>
+        <div class="arr-num count-up" data-target="640000" data-prefix="$" data-format="currency">$0</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SLIDE 6: Michael Wynkoop Highlight -->
+  <div class="slide slide-michael" data-slide="6">
+    <div class="michael-layout">
+      <div class="michael-image-side">
+        <img src="Michael.png" alt="Michael Wynkoop">
+      </div>
+      <div class="michael-content-side">
+        <p class="michael-eyebrow">BDR Spotlight</p>
+        <h2 class="michael-name">Michael<br>Wynkoop</h2>
+        <div class="michael-stats">
+          <div class="michael-stat">
+            <span class="stat-value count-up" data-target="39">0</span>
+            <span class="stat-label">Sets</span>
+          </div>
+          <div class="michael-stat">
+            <span class="stat-value count-up" data-target="29">0</span>
+            <span class="stat-label">Holds</span>
+          </div>
+          <div class="michael-stat">
+            <span class="stat-value accent count-up" data-target="81" data-suffix="%">0%</span>
+            <span class="stat-label">Show Rate</span>
+          </div>
+        </div>
+        <div class="michael-badge">
+          <span>&#9733;</span>
+          <span>Top BDR Performer</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: Presidents Club (F1 live) -->
+  <div class="slide slide-pclub" data-slide="7">
+    <div class="pc-ambient pc-ambient-1"></div>
+    <div class="pc-ambient pc-ambient-2"></div>
+    <div class="pc-wrap">
+      <div class="pc-head">
+        <div class="pc-eyebrow">🏁 BDR Racing Championship</div>
+        <h2 class="pc-title">PRESIDENT'S <em>CLUB</em></h2>
+        <div class="pc-sub"><span class="pc-live"></span><span id="pcSubtext">Loading race data…</span></div>
+      </div>
+      <div id="pcApp">
+        <div style="text-align:center;padding:40px;color:rgba(255,255,255,0.4);font-family:'Rajdhani',sans-serif;font-size:15px;">Loading…</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: Section Divider — RevOps & Enablement -->
+  <div class="slide slide-section bg-midnight" data-slide="8">
+    <div>
+      <p class="section-num">03</p>
+      <h2 class="section-title">RevOps &<br>Enablement</h2>
+      <div class="section-rule"></div>
+      <img src="Ops.png" alt="RevOps Team" class="section-photo">
+    </div>
+    <div class="egg-field" id="eggField8"></div>
+  </div>
+
+  <!-- SLIDE 9: Rev Ops -->
+  <div class="slide slide-enablement" data-slide="9">
+    <div class="enablement-layout">
+      <div class="enablement-image-side">
+        <img src="scottchef.jpg" alt="Scott — Rev Ops">
+      </div>
+      <div class="enablement-content-side">
+        <p class="enablement-eyebrow">RevOps & Enablement</p>
+        <h2 class="enablement-title">Rev Ops<br>Updates</h2>
+        <div class="enablement-rule"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: Enablement Updates -->
+  <div class="slide slide-enablement" data-slide="10">
+    <div class="enablement-layout">
+      <div class="enablement-image-side">
+        <img src="Jess.png" alt="Jess — Enablement">
+      </div>
+      <div class="enablement-content-side">
+        <p class="enablement-eyebrow">RevOps & Enablement</p>
+        <h2 class="enablement-title">Enablement<br>Updates</h2>
+        <div class="enablement-rule"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 11: Gifting Collage -->
+  <div class="slide slide-gifting" data-slide="11">
+    <div class="gifting-header">
+      <p class="section-label">Client Love</p>
+      <h2>Gifting Highlights</h2>
+      <p>Building relationships one gift at a time</p>
+    </div>
+    <div class="collage">
+      <div class="collage-item">
+        <img src="Gifting/IMG_7193.jpg" alt="Baby gift set">
+        <div class="collage-label">Baby Bee Box Deluxe</div>
+      </div>
+      <div class="collage-item">
+        <img src="Gifting/IMG_7189.jpg" alt="Wine & cheese gift">
+        <div class="collage-label">Wine & Cheese — Caymus</div>
+      </div>
+      <div class="collage-item">
+        <img src="Gifting/IMG_7190.jpg" alt="Champagne toast">
+        <div class="collage-label">Champagne Toast Deluxe</div>
+      </div>
+      <div class="collage-item">
+        <img src="Gifting/IMG_6430.png" alt="Branded RTIC cooler">
+        <div class="collage-label">Branded RTIC Cooler</div>
+      </div>
+      <div class="collage-item">
+        <img src="Gifting/IMG_7192.jpg" alt="Seddiq Law sign">
+        <div class="collage-label">Seddiq Law — Clients First</div>
+      </div>
+      <div class="collage-item">
+        <img src="kenzie.png" alt="Kenzie">
+        <div class="collage-label">Kenzie — Gift Queen</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 12: Sales Section -->
+  <div class="slide slide-section bg-sky" data-slide="12">
+    <div>
+      <p class="section-num">04</p>
+      <h2 class="section-title">Sales</h2>
+      <div class="section-rule"></div>
+      <img src="salesteam.png" alt="Sales Team" class="section-photo">
+    </div>
+    <div class="egg-field" id="eggField12"></div>
+  </div>
+
+  <!-- SLIDE 13: Sales Numbers -->
+  <div class="slide slide-sales" data-slide="13">
+    <div class="sales-inner">
+      <div class="sales-head">
+        <p class="section-label">Q1 Closed Won</p>
+        <h2>Sales Performance</h2>
+      </div>
+      <div class="sales-hero">
+        <div class="hero-amount count-up" data-target="3081500" data-prefix="$" data-format="currency">$0</div>
+        <div class="hero-sub">Total Closed Won Revenue</div>
+      </div>
+      <div class="sales-grid">
+        <div class="sales-stat">
+          <div class="stat-num count-up" data-target="34">0</div>
+          <div class="stat-desc">Deals Closed</div>
+        </div>
+        <div class="sales-stat">
+          <div class="stat-num sky-text count-up" data-target="8507" data-prefix="$" data-format="currency">$0</div>
+          <div class="stat-desc">Avg Deal Size</div>
+        </div>
+        <div class="sales-stat">
+          <div class="stat-num chart-text count-up" data-target="13" data-suffix="%">0%</div>
+          <div class="stat-desc">Win Rate</div>
+        </div>
+        <div class="sales-stat">
+          <div class="stat-num count-up" data-target="240000" data-prefix="$" data-format="currency">$0</div>
+          <div class="stat-desc">Biggest Deal</div>
+        </div>
+      </div>
+      <div class="sales-bottom">
+        <div class="sales-panel">
+          <div class="panel-title">Top 3 AEs</div>
+          <div class="panel-row">
+            <span class="panel-rank">1.</span>
+            <span class="panel-name">Mike</span>
+            <span class="panel-val count-up" data-target="1560000" data-prefix="$" data-format="currency">$0</span>
+          </div>
+          <div class="panel-row">
+            <span class="panel-rank">2.</span>
+            <span class="panel-name">Megan</span>
+          </div>
+          <div class="panel-row">
+            <span class="panel-rank">3.</span>
+            <span class="panel-name">Jake</span>
+          </div>
+        </div>
+        <div class="sales-panel">
+          <div class="panel-title">Big Deal Alerts</div>
+          <div class="panel-row">
+            <span class="panel-name">George Salinas</span>
+            <span class="panel-val count-up" data-target="240000" data-prefix="$" data-format="currency">$0</span>
+          </div>
+          <div class="panel-row">
+            <span class="panel-name">Bogins Munns & Munns</span>
+            <span class="panel-val count-up" data-target="240000" data-prefix="$" data-format="currency">$0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 14: Who We Sold To -->
+  <div class="slide slide-practice" data-slide="14">
+    <div class="practice-inner">
+      <div class="practice-head">
+        <p class="section-label">Q1 Revenue by Practice Area</p>
+        <h2>Who We Sold To</h2>
+      </div>
+      <div class="practice-bars">
+        <div class="pbar-row">
+          <span class="pbar-label">Personal Injury</span>
+          <div class="pbar-track"><div class="pbar-fill bar-pi" data-width="100%"><span class="pbar-val">$2,178,500</span></div></div>
+        </div>
+        <div class="pbar-row">
+          <span class="pbar-label">Family Law</span>
+          <div class="pbar-track"><div class="pbar-fill bar-mid" data-width="26.6%"><span class="pbar-val">$580,500</span></div></div>
+        </div>
+        <div class="pbar-row">
+          <span class="pbar-label">Estate & Probate</span>
+          <div class="pbar-track"><div class="pbar-fill bar-mid" data-width="25.6%"><span class="pbar-val">$558,000</span></div></div>
+        </div>
+        <div class="pbar-row">
+          <span class="pbar-label">Criminal Defense</span>
+          <div class="pbar-track"><div class="pbar-fill bar-mid" data-width="22%"><span class="pbar-val">$480,000</span></div></div>
+        </div>
+        <div class="pbar-row">
+          <span class="pbar-label">Employment Law</span>
+          <div class="pbar-track"><div class="pbar-fill bar-mid" data-width="20.1%"><span class="pbar-val">$438,000</span></div></div>
+        </div>
+        <div class="pbar-row">
+          <span class="pbar-label">Immigration</span>
+          <div class="pbar-track"><div class="pbar-fill bar-low" data-width="15.2%"><span class="pbar-val">$330,000</span></div></div>
+        </div>
+        <div class="pbar-row">
+          <span class="pbar-label">Bankruptcy Law</span>
+          <div class="pbar-track"><div class="pbar-fill bar-low" data-width="11%"><span class="pbar-val">$240,000</span></div></div>
+        </div>
+        <div class="pbar-row">
+          <span class="pbar-label">Business / IP</span>
+          <div class="pbar-track"><div class="pbar-fill bar-low" data-width="8.7%"><span class="pbar-val">$190,500</span></div></div>
+        </div>
+        <div class="pbar-row">
+          <span class="pbar-label">Other</span>
+          <div class="pbar-track"><div class="pbar-fill bar-low" data-width="8.3%"><span class="pbar-val">$181,000</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 15: Leadership Wisdom -->
+  <div class="slide slide-enablement" data-slide="15">
+    <div class="enablement-layout">
+      <div class="enablement-image-side">
+        <img src="zach.jpg" alt="Zach — Leadership">
+      </div>
+      <div class="enablement-content-side">
+        <p class="enablement-eyebrow">Sales</p>
+        <h2 class="enablement-title">Leadership<br>Wisdom</h2>
+        <div class="enablement-rule"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 16: New Offers -->
+  <div class="slide slide-enablement" data-slide="16">
+    <div class="enablement-layout">
+      <div class="enablement-image-side">
+        <img src="offers.jpg" alt="New Offers">
+      </div>
+      <div class="enablement-content-side">
+        <p class="enablement-eyebrow">Sales</p>
+        <h2 class="enablement-title">New<br>Offers</h2>
+        <div class="enablement-rule"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="nav">
+  <button id="prevBtn" aria-label="Previous slide">&#8592;</button>
+  <span class="slide-counter" id="counter">1 / 2</span>
+  <button id="nextBtn" aria-label="Next slide">&#8594;</button>
+</div>
+
+<div class="keyboard-hint" id="hint">Use arrow keys or click to navigate</div>
+
+<script>
+// ============================================
+// SLIDE ENGINE
+// ============================================
+const deck = {
+  current: 1,
+  slides: null,
+  total: 0,
+
+  init() {
+    this.slides = document.querySelectorAll('.slide');
+    this.total = this.slides.length;
+    this.updateUI();
+
+    // Keyboard
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); this.next(); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); this.prev(); }
+      if (e.key === 'Home') { e.preventDefault(); this.goTo(1); }
+      if (e.key === 'End') { e.preventDefault(); this.goTo(this.total); }
+      this.hideHint();
+    });
+
+    // Buttons
+    document.getElementById('prevBtn').addEventListener('click', () => this.prev());
+    document.getElementById('nextBtn').addEventListener('click', () => this.next());
+
+    // Touch
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
+    document.addEventListener('touchend', (e) => {
+      const diff = touchStartX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 60) {
+        diff > 0 ? this.next() : this.prev();
+      }
+    });
+
+    // Hide hint after 5s
+    setTimeout(() => this.hideHint(), 5000);
+  },
+
+  next() {
+    if (this.current < this.total) this.goTo(this.current + 1);
+  },
+
+  prev() {
+    if (this.current > 1) this.goTo(this.current - 1);
+  },
+
+  goTo(n) {
+    if (n < 1 || n > this.total || n === this.current) return;
+    this.slides[this.current - 1].classList.remove('active');
+    this.current = n;
+    this.slides[this.current - 1].classList.add('active');
+    this.updateUI();
+    this.triggerSlideAnimations();
+  },
+
+  updateUI() {
+    document.getElementById('counter').textContent = `${this.current} / ${this.total}`;
+    document.getElementById('progress').style.width = `${(this.current / this.total) * 100}%`;
+    document.getElementById('prevBtn').style.opacity = this.current === 1 ? 0.3 : 1;
+    document.getElementById('nextBtn').style.opacity = this.current === this.total ? 0.3 : 1;
+  },
+
+  triggerSlideAnimations() {
+    const active = this.slides[this.current - 1];
+    const animEls = active.querySelectorAll('[data-animate]');
+    animEls.forEach((el, i) => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      setTimeout(() => {
+        el.style.transition = 'opacity 0.6s, transform 0.6s';
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+      }, 100 + (i * 120));
+    });
+  },
+
+  hideHint() {
+    const hint = document.getElementById('hint');
+    if (hint) hint.style.opacity = '0';
+  }
+};
+
+deck.init();
+
+// ============================================
+// EASTER EGG HUNT — reusable across slides
+// ============================================
+function spawnEggs(fieldId, positions) {
+  const colors = [
+    '#E53935', '#FF8C00', '#FFD600', '#1E88E5', '#43A047',
+    '#EC407A', '#8E24AA', '#6D4C41',
+    'conic-gradient(#E53935, #FF8C00, #FFD600, #43A047, #1E88E5, #8E24AA, #E53935)',
+  ];
+  const accents = [
+    '#FF8A80', '#FFD180', '#FFF9C4', '#90CAF9', '#A5D6A7',
+    '#F8BBD0', '#CE93D8', '#A1887F', '#FFFFFF',
+  ];
+  const emptyEmojis = ['🐣', '🐰', '🌸', '✨', '🎀', '💐', '🥚', '🪺'];
+  const winnerIdx = Math.floor(Math.random() * 9);
+  const field = document.getElementById(fieldId);
+  if (!field) return;
+
+  colors.forEach((color, i) => {
+    const egg = document.createElement('button');
+    egg.className = 'easter-egg';
+    if (i === winnerIdx) egg.classList.add('winner');
+    if (color.startsWith('conic')) {
+      egg.style.background = color;
+      egg.style.setProperty('--egg-color', '#FF8C00');
+    } else {
+      egg.style.setProperty('--egg-color', color);
+    }
+
+    const rot = (Math.random() * 30) - 15;
+    egg.style.left = positions[i].left + '%';
+    egg.style.top = positions[i].top + '%';
+    egg.style.transform = `rotate(${rot}deg)`;
+    egg.style.setProperty('--egg-base-transform', `rotate(${rot}deg)`);
+    egg.style.setProperty('--egg-accent', accents[i] || 'rgba(255,255,255,0.3)');
+
+    const top = document.createElement('div');
+    top.className = 'egg-top';
+    const bottom = document.createElement('div');
+    bottom.className = 'egg-bottom';
+    const prize = document.createElement('span');
+    prize.className = 'egg-prize';
+    prize.textContent = i === winnerIdx ? '🪙' : emptyEmojis[i % emptyEmojis.length];
+
+    egg.appendChild(top);
+    egg.appendChild(bottom);
+    egg.appendChild(prize);
+
+    egg.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (egg.classList.contains('cracked')) return;
+      egg.classList.add('cracked');
+    });
+
+    field.appendChild(egg);
+  });
+}
+
+spawnEggs('eggField', [
+  {left:3,top:15},{left:88,top:10},{left:12,top:55},{left:75,top:45},{left:45,top:8},
+  {left:92,top:65},{left:5,top:82},{left:60,top:78},{left:30,top:72},
+]);
+spawnEggs('eggField2', [
+  {left:2,top:8},{left:85,top:5},{left:90,top:35},{left:6,top:40},{left:92,top:70},
+  {left:3,top:75},{left:50,top:88},{left:78,top:90},{left:20,top:90},
+]);
+spawnEggs('eggField4', [
+  {left:4,top:6},{left:90,top:12},{left:7,top:35},{left:88,top:50},{left:3,top:65},
+  {left:92,top:78},{left:25,top:85},{left:70,top:88},{left:48,top:5},
+]);
+spawnEggs('eggField8', [
+  {left:6,top:10},{left:92,top:8},{left:3,top:42},{left:90,top:38},{left:50,top:5},
+  {left:8,top:75},{left:88,top:82},{left:35,top:88},{left:65,top:85},
+]);
+spawnEggs('eggField12', [
+  {left:5,top:5},{left:88,top:15},{left:2,top:50},{left:93,top:45},{left:45,top:3},
+  {left:7,top:80},{left:90,top:75},{left:28,top:90},{left:72,top:82},
+]);
+
+// ============================================
+// SLIDE 3 — ORG MOVES INTERACTION
+// ============================================
+(function() {
+  const btn = document.getElementById('orgLaunch');
+  const people = ['person-tyler', 'person-megan', 'person-sydney', 'person-simon'];
+  let fired = false;
+
+  btn.addEventListener('click', () => {
+    if (fired) return;
+    fired = true;
+    btn.classList.add('hidden');
+
+    people.forEach((id, i) => {
+      const el = document.getElementById(id);
+      setTimeout(() => {
+        el.classList.add('moving');
+        el.classList.add('moved');
+        // Remove the trailing particle after animation
+        setTimeout(() => el.classList.remove('moving'), 1200);
+      }, i * 400);
+    });
+  });
+
+  // Reset when navigating away and back (org)
+  const observer = new MutationObserver(() => {
+    const slide = document.querySelector('.slide-org');
+    if (slide && !slide.classList.contains('active')) {
+      fired = false;
+      btn.classList.remove('hidden');
+      people.forEach(id => {
+        const el = document.getElementById(id);
+        el.classList.remove('moved', 'moving');
+      });
+    }
+  });
+  const orgSlide = document.querySelector('.slide-org');
+  if (orgSlide) observer.observe(orgSlide, { attributes: true, attributeFilter: ['class'] });
+})();
+
+// ============================================
+// COUNT-UP ANIMATION FOR DATA SLIDES
+// ============================================
+(function() {
+  function animateCountUps(slide) {
+    const els = slide.querySelectorAll('.count-up');
+    els.forEach((el, i) => {
+      const target = parseFloat(el.dataset.target);
+      const prefix = el.dataset.prefix || '';
+      const suffix = el.dataset.suffix || '';
+      const decimals = parseInt(el.dataset.decimals) || 0;
+      const isCurrency = el.dataset.format === 'currency';
+      const duration = 1200;
+      const start = performance.now();
+
+      setTimeout(() => {
+        function tick(now) {
+          const elapsed = now - start;
+          const progress = Math.min(elapsed / duration, 1);
+          // Ease out cubic
+          const eased = 1 - Math.pow(1 - progress, 3);
+          const current = eased * target;
+
+          if (isCurrency) {
+            el.textContent = prefix + Math.round(current).toLocaleString('en-US');
+          } else if (decimals > 0) {
+            el.textContent = current.toFixed(decimals) + suffix;
+          } else {
+            el.textContent = prefix + Math.round(current) + suffix;
+          }
+
+          if (progress < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+      }, i * 80);
+    });
+  }
+
+  function resetCountUps(slide) {
+    const els = slide.querySelectorAll('.count-up');
+    els.forEach(el => {
+      const prefix = el.dataset.prefix || '';
+      const suffix = el.dataset.suffix || '';
+      el.textContent = prefix + '0' + suffix;
+    });
+  }
+
+  // Animate horizontal bars
+  function animateBars(slide) {
+    slide.querySelectorAll('.hbar-fill, .pbar-fill').forEach((bar, i) => {
+      setTimeout(() => { bar.style.width = bar.dataset.width; }, 200 + i * 100);
+    });
+    // Animate vertical bars
+    slide.querySelectorAll('.vbar').forEach((bar, i) => {
+      setTimeout(() => { bar.style.height = bar.dataset.height; }, 200 + i * 200);
+    });
+  }
+  function resetBars(slide) {
+    slide.querySelectorAll('.hbar-fill, .pbar-fill').forEach(bar => { bar.style.width = '0%'; });
+    slide.querySelectorAll('.vbar').forEach(bar => { bar.style.height = '0%'; });
+  }
+
+  // Animate donuts
+  function animateDonuts(slide) {
+    slide.querySelectorAll('.donut-fill').forEach((circle, i) => {
+      const pct = parseFloat(circle.dataset.percent);
+      const circumference = 251.3; // 2 * PI * 40
+      const offset = circumference - (circumference * pct / 100);
+      setTimeout(() => {
+        circle.style.strokeDashoffset = offset;
+      }, 400 + i * 200);
+    });
+  }
+  function resetDonuts(slide) {
+    slide.querySelectorAll('.donut-fill').forEach(circle => {
+      circle.style.strokeDashoffset = 251.3;
+    });
+  }
+
+  // Watch for any slide with count-ups becoming active
+  document.querySelectorAll('.slide').forEach(slide => {
+    const hasCountUps = slide.querySelectorAll('.count-up').length > 0;
+    const hasBars = slide.querySelectorAll('.hbar-fill, .vbar, .pbar-fill').length > 0;
+    const hasDonuts = slide.querySelectorAll('.donut-fill').length > 0;
+    if (!hasCountUps && !hasBars && !hasDonuts) return;
+
+    const obs = new MutationObserver(() => {
+      if (slide.classList.contains('active')) {
+        if (hasCountUps) animateCountUps(slide);
+        if (hasBars) animateBars(slide);
+        if (hasDonuts) animateDonuts(slide);
+      } else {
+        if (hasCountUps) resetCountUps(slide);
+        if (hasBars) resetBars(slide);
+        if (hasDonuts) resetDonuts(slide);
+      }
+    });
+    obs.observe(slide, { attributes: true, attributeFilter: ['class'] });
+  });
+})();
+
+// ============================================
+// PRESIDENTS CLUB — LIVE GOOGLE SHEET DATA
+// ============================================
+(function() {
+  const SHEET_ID = '1LhpDrF5F5cNlHuToXPV6SZ18fMeOM55IqZK43zmtODo';
+  const GID = 0;
+  const JSON_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${GID}`;
+
+  const CATS = [
+    { key: 'sets',     label: 'Qualifying',    max: 30, color: '#E10600' },
+    { key: 'held',     label: 'Race Pace',     max: 35, color: '#00D2BE' },
+    { key: 'showRate', label: 'Consistency',   max: 15, color: '#FF8700' },
+    { key: 'arr',      label: 'Podium Finish', max: 20, color: '#FFD700' },
+  ];
+
+  function extractRepsFromGviz(text) {
+    const jsonStr = text.replace(/^[^(]*\(/, '').replace(/\);?\s*$/, '');
+    const data = JSON.parse(jsonStr);
+    const rows = data.table.rows;
+
+    // The sheet has monthly blocks then a cumulative totals section at the end.
+    // We use "last value wins" per rep — the cumulative row overwrites monthly ones.
+    const repMap = {};
+    for (const row of rows) {
+      const cells = row.c;
+      if (!cells || cells.length < 6) continue;
+      const name = cells[0] && cells[0].v ? String(cells[0].v).trim() : '';
+      if (!name) continue;
+      const lower = name.toLowerCase();
+      if (lower.includes('rep') || lower.includes('meeting') || lower.includes('pts')) continue;
+
+      const total = cells[5] && cells[5].v != null ? parseFloat(cells[5].v) : 0;
+      if (total === 0) continue;
+
+      // Last value wins — cumulative row at end overwrites monthly rows
+      repMap[name] = { name, total };
+    }
+
+    const reps = Object.values(repMap).map(r => ({
+      name: r.name,
+      total: parseFloat(r.total.toFixed(2)),
+    }));
+    reps.sort((a, b) => b.total - a.total);
+    return reps.slice(0, 6);
+  }
+
+  function renderPC(reps) {
+    if (!reps.length) {
+      document.getElementById('pcApp').innerHTML = '<div style="color:rgba(255,255,255,0.4);text-align:center;padding:40px">No data found.</div>';
+      return;
+    }
+    const leader = reps[0];
+    const avg = (reps.reduce((s, r) => s + r.total, 0) / reps.length).toFixed(1);
+    const qualified = reps.filter(r => r.total >= 60).length;
+    document.getElementById('pcSubtext').textContent = `Live Race Telemetry · ${reps.length} drivers competing`;
+
+    const carColors = ['#E10600','#00D2BE','#FF8700','#006F62','#1E41FF','#C92D4B','#37BEDD','#B6BABD'];
+
+    let html = '';
+
+    // Race Track first (KPIs go at the bottom like the real dashboard)
+    html += `<div class="pc-track-section">
+      <div class="pc-track-head">
+        <div><div class="pc-track-title">🏎️ LIVE RACE POSITIONS</div><div class="pc-track-sub">Current standings on track</div></div>
+      </div>
+      <div class="pc-track"><div class="pc-finish"></div>`;
+
+    const maxPts = Math.max(...reps.map(r => r.total), 1);
+    reps.forEach((rep, i) => {
+      const pos = ((rep.total / maxPts) * 75) + 10;
+      const cls = i === 0 ? 'p1' : i === 1 ? 'p2' : i === 2 ? 'p3' : 'px';
+      html += `<div class="pc-lane">
+        <div class="pc-car ${cls}" style="left:${pos}%; animation-delay:${i * 0.15}s; color:${carColors[i % carColors.length]}">
+          <div class="pc-car-pos">${i + 1}</div>
+          <div class="pc-car-icon">🏎️</div>
+          <div>
+            <div class="pc-car-name">${rep.name.split(' ')[0]}</div>
+            <div class="pc-car-score">${rep.total.toFixed(1)} pts</div>
+          </div>
+        </div>
+      </div>`;
+    });
+    html += `</div></div>`;
+
+    // KPIs at the bottom
+    html += `<div class="pc-kpis">
+      <div class="pc-kpi"><div class="pc-kpi-label">🏆 Pole Position</div><div class="pc-kpi-val">${leader.name.split(' ')[0]}</div><div class="pc-kpi-sub">${leader.total.toFixed(1)} PTS</div></div>
+      <div class="pc-kpi"><div class="pc-kpi-label">📊 Team Avg</div><div class="pc-kpi-val">${avg}</div><div class="pc-kpi-sub">Points</div></div>
+      <div class="pc-kpi"><div class="pc-kpi-label">🎯 Podium Pace</div><div class="pc-kpi-val">${reps.length}</div><div class="pc-kpi-sub">of ${reps.length} drivers</div></div>
+      <div class="pc-kpi"><div class="pc-kpi-label">📅 Race</div><div class="pc-kpi-val">3</div><div class="pc-kpi-sub">of 7 rounds</div></div>
+    </div>`;
+
+    document.getElementById('pcApp').innerHTML = html;
+  }
+
+  async function loadPC() {
+    try {
+      const resp = await fetch(JSON_URL);
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const text = await resp.text();
+      renderPC(extractRepsFromGviz(text));
+    } catch (err) {
+      document.getElementById('pcApp').innerHTML = `<div style="color:rgba(255,255,255,0.4);text-align:center;padding:40px">Could not load sheet data: ${err.message}</div>`;
+    }
+  }
+
+  // Load on init and when slide becomes active
+  loadPC();
+  const pcSlide = document.querySelector('.slide-pclub');
+  if (pcSlide) {
+    const obs = new MutationObserver(() => {
+      if (pcSlide.classList.contains('active')) loadPC();
+    });
+    obs.observe(pcSlide, { attributes: true, attributeFilter: ['class'] });
+  }
+})();
+</script>
+</body>
+</html>
