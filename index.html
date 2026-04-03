@@ -1668,6 +1668,16 @@ html, body {
   border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 .sales-panel .panel-row:last-child { border-bottom: none; }
+.big-deal-row { align-items: center !important; }
+.big-deal-img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--flax);
+  flex-shrink: 0;
+  margin-right: 12px;
+}
 .panel-rank {
   font-family: var(--font-display);
   font-weight: 700;
@@ -2209,11 +2219,13 @@ html, body {
         </div>
         <div class="sales-panel">
           <div class="panel-title">Big Deal Alerts</div>
-          <div class="panel-row">
+          <div class="panel-row big-deal-row">
+            <img src="Salinas.png" alt="George Salinas" class="big-deal-img">
             <span class="panel-name">George Salinas</span>
             <span class="panel-val count-up" data-target="240000" data-prefix="$" data-format="currency">$0</span>
           </div>
-          <div class="panel-row">
+          <div class="panel-row big-deal-row">
+            <img src="Bogins.png" alt="Bogins Munns & Munns" class="big-deal-img">
             <span class="panel-name">Bogins Munns & Munns</span>
             <span class="panel-val count-up" data-target="240000" data-prefix="$" data-format="currency">$0</span>
           </div>
